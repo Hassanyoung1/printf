@@ -1,45 +1,27 @@
 #include "main.h"
 
 /**
- * _printf - takes the format string as the first argument
- * @format: string as first argument
- * Return: the number of characters except the null
+ * print_formatted_string - Prints a string with non-printable characters
+ * @str: The string to print
+ * Return: nothing
  */
-int _printf(const char *format, ...)
+void print_formatted_string(const char *str)
 {
-	va_list args;
-	int count = 0;
+	int len = strlen(str);
+	int i;
 
-	va_start(args, format);
-
-	while (*format)
+	/*Loop over each character in the string*/
+	for (i = 0; i < len; i++)
 	{
-		if (*format == '%' && *(format + 1) == 'S')
+		if (str[i] < 32 || str[i] >= 127)
 		{
-			char *s = va_arg(args, char *);
-
-			while (*s)
-			{
-				if (*s >= 32 && *s < 127)
-				{
-					putchar(*s);
-				}
-				else
-				{
-					printf("\\x%02X", (unsigned char) *s);
-					count += 3;
-				}
-				s++;
-				count++;
-			}
-			format += 2;
+			printf("\\x%02X", str[i]);
 		}
 		else
 		{
-			putchar(*format++);
-			count++;
+			/**If it's a printable character, simply print it*/
+			printf("%c", str[i]);
 		}
 	}
-	va_end(args);
-	return (count);
 }
+
