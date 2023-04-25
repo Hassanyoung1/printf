@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <main.h>
 
 /**
  * _printf - takes a string parameter format

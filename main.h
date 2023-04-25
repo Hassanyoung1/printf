@@ -1,9 +1,5 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include <stdio.h>
-#include <unistd.h>
-#include <stdarg.h>
-
 /**header files*/
 #include <stdio.h>
 #include <stdarg.h>
@@ -12,11 +8,10 @@
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
-
 /**function prototype*/
-
-/**nt putchar(char c);*/
-int _printf(const char *format, ...);
+extern int _printf(const char *format, ...);
+int print_unsigned(unsigned int val, int base, int uppercase);
+int _putchar(char c);
 int print_number(int n);
 int print_binary(unsigned int n);
 int _print_number(int n, char *buffer);
