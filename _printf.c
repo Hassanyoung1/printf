@@ -9,12 +9,11 @@
 int _printf(const char *format, ...)
 {
 	va_list args;
+	int count;
 
 	va_start(args, format);
-
-	int count = vfprintf(stdout, format, args);
-
+	count = vfprintf(stdout, format, args);
 	va_end(args);
-
 	return (count);
 }
+
