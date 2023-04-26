@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include <unistd.h>
 /**function prototype*/
+
 int _printf(const char *format, ...);
 int print_unsigned(unsigned int val, int base, int uppercase);
 int _putchar(char c);
@@ -21,4 +22,6 @@ void print_pointer(void *ptr);
 int print_number(int n);
 int print_binary(unsigned int n);
 int _print_number(int n, char *buffer);
+int print_hex(unsigned long int num, int is_capital);
+int print_int(int n, int flags)
 #endif
