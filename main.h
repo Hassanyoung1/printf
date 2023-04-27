@@ -28,6 +28,7 @@ int _printf(const char *format, ...);
 int _printf(const char *format, ...);
 int print_unsigned(unsigned int val, int base, int uppercase);
 int _putchar(char c);
+void print_buffer(char buffer[], int *buff_ind);
 void print_numb(unsigned int number, char format);
 void print_formatted_string(const char *str);
 void print_pointer(void *ptr);
