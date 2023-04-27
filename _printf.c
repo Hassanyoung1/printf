@@ -1,48 +1,66 @@
 #include "main.h"
 
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
- * _printf - takes the format string as the first argument
- * @format: string as first argument
- * Return: the number of characters except the null
+ * _printf - Prints a formatted string to the console.
+ * @format: The format string to print.
+ *
+ * Return: The number of characters printed, or -1 if an error occurred.
  */
+
 int _printf(const char *format, ...)
 {
+	if (!format)
+		return (-1);
+
 	va_list args;
-	int i = 0;
-	char c;
-	char *s;
 
 	va_start(args, format);
 
-	while (format[i])
+	char buffer[BUFF_SIZE];
+	int buff_ind = 0, printed_chars = 0;
+
+	for (; *format; format++)
 	{
-		if (format[i] == '%')
+		if (*format == '%')
 		{
-			switch (format[++i])
-			{
-				case 'c':
-					c = va_arg(args, int);
-					putchar(c);
-					break;
-				case 's':
-					s = va_arg(args, char *);
-					fputs(s, stdout);
-					break;
-				case '%':
-					putchar('%');
-					break;
-				default:
-					putchar('%');
-					putchar(format[i]);
-					break;
-			}
+			format++;
+			int flags = get_flags(format, &format);
+			int width = get_width(format, &format, args);
+			int precision = get_precision(format, &format, args);
+			int size = get_size(format, &format);
+			int printed = handle_print(format, &format, args,
+				buffer, flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			printed_chars += printed;
 		}
 		else
 		{
-			putchar(format[i]);
+			buffer[buff_ind++] = *format;
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+			printed_chars++;
 		}
-		i++;
 	}
+
+	print_buffer(buffer, &buff_ind);
+
 	va_end(args);
-	return (i);
+
+	return (printed_chars);
+}
+/**
+ * print_buffer - prints the contents of the buffer
+ * @buffer: the buffer to be printed
+ * @buff_ind: pointer to the index at which to add the next character
+ *
+ * This function prints the contents of the buffer if it's not empty.
+ */
+void print_buffer(char buffer[], int *buff_ind)
+{
+	if (*buff_ind > 0)
+		write(STDOUT_FILENO, buffer, *buff_ind);
+	*buff_ind = 0;
 }
