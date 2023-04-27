@@ -1,88 +1,48 @@
 #include "main.h"
 
 /**
- * print_buffer - Prints the contents of the buffer if it's not empty.
- * @buffer: The buffer to print.
- * @buff_ind: The index of the buffer.
- *
- * Return: void.
- */
-void print_buffer(char buffer[], int *buff_ind)
-{
-	/* If buffer is not empty, print its contents */
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
-
-	/* Reset buffer index */
-	*buff_ind = 0;
-}
-
-/**
- * _printf - Prints a formatted string to the console.
- * @format: The format string to print.
- *
- * Return: The number of characters printed, or -1 if an error occurred.
+ * _printf - takes the format string as the first argument
+ * @format: string as first argument
+ * Return: the number of characters except the null
  */
 int _printf(const char *format, ...)
 {
-	/* Initialize variables */
-	int i, printed = 0, printed_chars = 0;
-	int flags, width, precision, size, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+	va_list args;
+	int i = 0;
+	char c;
+	char *s;
 
-	/* Return -1 if format string is NULL */
-	if (format == NULL)
-		return (-1);
+	va_start(args, format);
 
-	/* Start variable arguments list */
-	va_start(list, format);
-
-	/* Loop through format string */
-	for (i = 0; format && format[i] != '\0'; i++)
+	while (format[i])
 	{
-		/* If character is not %, add it to buffer */
-		if (format[i] != '%')
+		if (format[i] == '%')
 		{
-			buffer[buff_ind++] = format[i];
-			/* If buffer is full, print it */
-			if (buff_ind == BUFF_SIZE)
+			switch (format[++i])
 			{
-				print_buffer(buffer, &buff_ind);
+				case 'c':
+					c = va_arg(args, int);
+					putchar(c);
+					break;
+				case 's':
+					s = va_arg(args, char *);
+					fputs(s, stdout);
+					break;
+				case '%':
+					putchar('%');
+					break;
+				default:
+					putchar('%');
+					putchar(format[i]);
+					break;
 			}
-			/* Increment number of printed characters */
-			printed_chars++;
 		}
-		/* If character is %, format the next argument */
 		else
 		{
-			/* Print buffer before formatting */
-			print_buffer(buffer, &buff_ind);
-			/* Get formatting options */
-			flags = get_flags(format, &i);
-			width = get_width(format, &i, list);
-			precision = get_precision(format, &i, list);
-			size = get_size(format, &i);
-			i++;
-			/* Print formatted argument */
-			printed = handle_print(format, &i, list, buffer,
-					       flags, width, precision, size);
-			/* Return -1 if an error occurred */
-			if (printed == -1)
-			{
-				return (-1);
-			}
-			/* Increment number of printed characters */
-			printed_chars += printed;
+			putchar(format[i]);
 		}
+		i++;
 	}
-
-	/* Print any remaining characters in buffer */
-	print_buffer(buffer, &buff_ind);
-
-	/* End variable arguments list */
-	va_end(list);
-
-	/* Return number of printed characters */
-	return (printed_chars);
+	va_end(args);
+	return (i);
 }
